@@ -1,0 +1,34 @@
+function pr = prime(m,n)
+% prime(m,n) returns all prime numbers between m and n
+
+% ----- Input validation -----
+if (m ~= floor(m)) || (n ~= floor(n)) || (m <= 0) || (n <= 0)
+    error('The input argument must be a positive integer.')
+end
+
+if n <= m
+    error('The value of n must be larger than the value of m.')
+end
+
+% ----- Prime search -----
+pr = [];
+
+for num = m:n
+    if num < 2
+        continue
+    end
+    
+    isPrime = true;
+    for k = 2:sqrt(num)
+        if rem(num,k) == 0
+            isPrime = false;
+            break
+        end
+    end
+    
+    if isPrime
+        pr = [pr num];
+    end
+end
+
+end
