@@ -1,0 +1,44 @@
+function V = Volfuel(h)
+    % Volfuel calculates the volume of fuel in a vertical tank
+    % Input: h = height of fuel (inches)
+    % Output: V = volume (gallons)
+    
+    r = 15;        % Radius in inches
+    H_cyl = 40;    % Height of the cylindrical part
+    conv = 231;    % Conversion factor: 1 gallon = 231 cubic inches
+    
+    % Geometric logic based on fuel height
+    if h >= 0 && h < r
+        % --- Phase 1: Lower Hemispheric Cap ---
+        % Formula for spherical cap volume
+        V_inch3 = pi * h^2 * (r - h/3);
+        
+    elseif h >= r && h < (r + H_cyl)
+        % --- Phase 2: Cylindrical Middle Section ---
+        % Volume = Full lower hemisphere + portion of cylinder
+        V_lower_hemisphere = (2/3) * pi * r^3;
+        V_cyl_part = pi * r^2 * (h - r);
+        V_inch3 = V_lower_hemisphere + V_cyl_part;
+        
+    elseif h >= (r + H_cyl) && h <= (2*r + H_cyl)
+        % --- Phase 3: Upper Hemispheric Cap ---
+        % Volume = Lower hemisphere + Full cylinder + top cap portion
+        V_lower_hemisphere = (2/3) * pi * r^3;
+        V_full_cylinder = pi * r^2 * H_cyl;
+        
+        h_top = h - (r + H_cyl); % Height within the top sphere
+        V_top_cap = pi * h_top^2 * (r - h_top/3);
+        
+        V_inch3 = V_lower_hemisphere + V_full_cylinder + V_top_cap;
+        
+    else
+        % Height is out of bounds
+        V_inch3 = 0;
+        if h > 70
+            warning('Height h exceeds tank capacity (70 in).');
+        end
+    end
+    
+    % Convert from cubic inches to gallons
+    V = V_inch3 / conv;
+end
